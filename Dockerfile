@@ -18,4 +18,4 @@ COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 9090
 
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=${PORT:-9090}"]
