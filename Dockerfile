@@ -1,21 +1,18 @@
+# Use the official OpenJDK 17 image as a base
+FROM maven:3.8.4-openjdk-17 AS build
 
-# Stage 1: Build the Spring Boot application
-FROM maven:3.9-eclipse-temurin-17 AS build
-
+# Set the working directory inside the container
 WORKDIR /app
 
-COPY pom.xml .
-COPY src ./src
+# Add a volume to store logs
+VOLUME /tmp
 
-RUN mvn clean package -DskipTests
+# Copy the JAR file to the container
+ARG JAR_FILE=target/*.jar
+COPY ${JAR_FILE} app.jar
 
-# Stage 2: Run the application
-FROM eclipse-temurin:17-jre
-
-WORKDIR /app
-
-COPY --from=build /app/target/*.jar app.jar
-
+# Expose port 9090 (or your configured port)
 EXPOSE 9090
 
-ENTRYPOINT ["sh", "-c", "java -jar app.jar --server.port=${PORT:-9090}"]
+# Run the Spring Boot app
+ENTRYPOINT ["java", "-jar", "app.jar"]

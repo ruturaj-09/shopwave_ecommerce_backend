@@ -48,7 +48,7 @@ public class AppConfig {
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration cfg = new CorsConfiguration();
                 cfg.setAllowedOrigins(Arrays.asList(
-                        "https://shopwave-ecommerce-frontend-plum.vercel.app/",
+                        "https://shopwave-ecommerce-frontend-plum.vercel.app",
                         "http://localhost:3000",
                         "http://localhost:5173"));
                 cfg.setAllowedMethods(Collections.singletonList("*"));
