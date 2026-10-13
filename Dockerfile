@@ -4,15 +4,13 @@ FROM maven:3.8.4-openjdk-17 AS build
 
 WORKDIR /app
 
-# Copy Maven configuration and source code
 COPY pom.xml .
 COPY src ./src
 
-# Build the JAR file
 RUN mvn clean package -DskipTests
 
 # Stage 2: Run the application
-FROM openjdk:17-jdk-slim
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
