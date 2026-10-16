@@ -36,13 +36,20 @@ public class EmailService {
 
         } catch (MailException e) {
 
-            // Print the REAL Gmail/SMTP error in Vercel logs
             System.err.println("========== EMAIL SEND FAILED ==========");
-            System.err.println("Error message: " + e.getMessage());
-            e.printStackTrace();
+            System.err.println("EXCEPTION CLASS: " + e.getClass().getName());
+            System.err.println("EXCEPTION MESSAGE: " + e.getMessage());
+
+            Throwable cause = e.getCause();
+
+            while (cause != null) {
+                System.err.println("CAUSE CLASS: " + cause.getClass().getName());
+                System.err.println("CAUSE MESSAGE: " + cause.getMessage());
+                cause = cause.getCause();
+            }
+
             System.err.println("=======================================");
 
-            // Keep the original exception as the cause
             throw new MailSendException("Failed to send email", e);
         }
     }
