@@ -15,22 +15,35 @@ public class EmailService {
     @Autowired
     private JavaMailSender javaMailSender;
 
-
-    public void sendVerificationOtpEmail(String userEmail, String otp, String subject, String text) throws MessagingException, MailSendException {
-
+    public void sendVerificationOtpEmail(
+            String userEmail,
+            String otp,
+            String subject,
+            String text
+    ) throws MessagingException, MailSendException {
 
         try {
             MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
 
+            MimeMessageHelper helper =
+                    new MimeMessageHelper(mimeMessage, "utf-8");
 
             helper.setSubject(subject);
-            helper.setText(text+otp, true);
+            helper.setText(text + otp, true);
             helper.setTo(userEmail);
+
             javaMailSender.send(mimeMessage);
+
         } catch (MailException e) {
+
+            // Print the REAL Gmail/SMTP error in Vercel logs
+            System.err.println("========== EMAIL SEND FAILED ==========");
+            System.err.println("Error message: " + e.getMessage());
             e.printStackTrace();
-            throw new MailSendException("Failed to send email");
+            System.err.println("=======================================");
+
+            // Keep the original exception as the cause
+            throw new MailSendException("Failed to send email", e);
         }
     }
 }
