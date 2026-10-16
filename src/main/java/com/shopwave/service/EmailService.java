@@ -19,10 +19,6 @@ public class EmailService {
             String subject,
             String text) throws MessagingException {
 
-        System.out.println("========== OTP EMAIL START ==========");
-        System.out.println("EMAIL: " + userEmail);
-        System.out.println("OTP: " + otp);
-
         try {
             MimeMessage mimeMessage =
                     javaMailSender.createMimeMessage();
@@ -34,34 +30,26 @@ public class EmailService {
             helper.setText(text + otp, true);
             helper.setTo(userEmail);
 
-            System.out.println("========== CALLING SMTP ==========");
+            System.out.println("CALLING SMTP");
 
             javaMailSender.send(mimeMessage);
 
-            System.out.println("========== EMAIL SENT SUCCESSFULLY ==========");
+            System.out.println("EMAIL SENT SUCCESSFULLY");
 
         } catch (Exception e) {
 
-            System.err.println("========== SMTP ERROR ==========");
-            System.err.println("Exception Type: "
-                    + e.getClass().getName());
-            System.err.println("Exception Message: "
-                    + e.getMessage());
-
-            Throwable cause = e.getCause();
-
-            while (cause != null) {
-                System.err.println("CAUSE TYPE: "
-                        + cause.getClass().getName());
-                System.err.println("CAUSE MESSAGE: "
-                        + cause.getMessage());
-
-                cause = cause.getCause();
-            }
-
-            e.printStackTrace();
-
-            System.err.println("========== SMTP ERROR END ==========");
+            System.err.println(
+                    "SMTP_FAILURE: "
+                            + e.getClass().getName()
+                            + " | "
+                            + e.getMessage()
+                            + " | CAUSE="
+                            + (e.getCause() != null
+                            ? e.getCause().getClass().getName()
+                              + ": "
+                              + e.getCause().getMessage()
+                            : "none")
+            );
 
             throw e;
         }
